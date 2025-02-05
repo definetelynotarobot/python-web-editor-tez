@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Python Editor</title>
+    <link rel="stylesheet" href="https://pyscript.net/releases/2024.4.1/core.css">
+    <link rel="stylesheet" href="../static/css/styles.css">
+    <script type="module" src="https://pyscript.net/releases/2024.4.1/core.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Python Web Editor 🐍</h1>
+
+        <div class="examples-container">
+            <button class="example-btn" data-example="basic">Basit Örnek</button>
+            <button class="example-btn" data-example="math">Matematik Örneği</button>
+            <button class="example-btn" data-example="dictionary">Sözlük Örneği</button>
+        </div>
+
+        <textarea id="python-code" placeholder="Python kodunuzu buraya yazınız..."></textarea>
+
+        <button id="run-button">Kodu Çalıştır ▶️</button>
+
+        <h2>Çıktı:</h2>
+        <pre id="output"></pre>
+    </div>
+
+    <script type="py">
+        from js import document, console
+        from pyodide.ffi import create_proxy
+        import io, sys
+
+        examples = {
+            "basic": '''
+print("Hello from the browser! 👋")
+name = "Alice"
+age = 28
+print(f"{name} is {age} years old. Next year: {age+1}")''',
+
+            "math": '''
+import math
+
+radius = 5
+print(f"Area: {math.pi * radius**2:.2f}")
+print(f"Circumference: {2 * math.pi * radius:.2f}")''',
+
+            "dictionary": '''
+student_grades = {"Math": 90, "Science": 85, "History": 88}
+for subject, grade in student_grades.items():
+    print(f"{subject.ljust(10)}: {'⭐' * (grade // 10)}")'''
+        }
+
+        def load_example(event):
+            example_id = event.target.getAttribute("data-example")
+            document.getElementById("python-code").value = examples[example_id]
+
+        def run_code(event):
+            code = document.getElementById("python-code").value
+            output_div = document.getElementById("output")
+            
+            old_stdout = sys.stdout
+            new_stdout = io.StringIO()
+            sys.stdout = new_stdout
+
+            try:
+                exec(code)
+                output = new_stdout.getvalue()
+                output_div.textContent = output
+            except Exception as e:
+                output_div.textContent = f"Error: {str(e)}"
+            finally:
+                sys.stdout = old_stdout
+
+        # Setup proxies
+        run_code_proxy = create_proxy(run_code)
+        example_proxies = [create_proxy(load_example) for _ in examples]
+
+        # Event listeners
+        document.getElementById("run-button").addEventListener("click", run_code_proxy)
+        for btn in document.getElementsByClassName("example-btn"):
+            btn.addEventListener("click", example_proxies[0])
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,143 @@
+:root {
+    --primary: #2d3e50;
+    --secondary: #42b883;
+    --background: #f8f9fa;
+    --text: #2c3e50;
+    --border: #e0e0e0;
+    --output-bg: #ffffff;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    text-align: center;
+    background: var(--background);
+    padding: 40px 20px;
+    color: var(--text);
+    line-height: 1.6;
+}
+
+h1 {
+    color: var(--primary);
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    font-weight: 600;
+    letter-spacing: -0.5px;
+}
+
+#python-code {
+    width: 80%;
+    max-width: 800px;
+    height: 300px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    background: var(--output-bg);
+    font-family: 'Fira Code', monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+#python-code:focus {
+    outline: none;
+    border-color: var(--secondary);
+    box-shadow: 0 4px 6px -1px rgba(66, 184, 131, 0.1);
+}
+
+button {
+    padding: 12px 28px;
+    font-size: 16px;
+    background: var(--secondary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    text-transform: uppercase;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    margin: 20px 0;
+}
+
+button:hover {
+    background: #359268;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px -1px rgba(66, 184, 131, 0.3);
+}
+
+h2 {
+    color: var(--primary);
+    margin: 30px 0 15px;
+    font-size: 1.4rem;
+    font-weight: 500;
+}
+
+#output {
+    width: 80%;
+    max-width: 800px;
+    min-height: 150px;
+    margin: 0 auto;
+    padding: 20px;
+    background: var(--primary);
+    border-radius: 12px;
+    text-align: left;
+    color: #ffffff;
+    font-family: 'Fira Code', monospace;
+    white-space: pre-wrap;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Add responsive design */
+@media (max-width: 768px) {
+    #python-code, #output {
+        width: 95%;
+        margin: 10px auto;
+    }
+    
+    h1 {
+        font-size: 2rem;
+    }
+}
+/* Add these to your existing styles */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.examples-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.example-btn {
+    background: var(--primary);
+    padding: 8px 16px;
+    font-size: 14px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    text-transform: none;
+    letter-spacing: normal;
+    margin: 0;
+}
+
+.example-btn:hover {
+    background: #3a506b;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 768px) {
+    .examples-container {
+        flex-direction: column;
+    }
+    
+    .example-btn {
+        width: 100%;
+    }
+}
