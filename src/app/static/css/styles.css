@@ -1,33 +1,97 @@
 :root {
-    --primary: #2d3e50;
-    --secondary: #42b883;
-    --background: #f8f9fa;
-    --text: #2c3e50;
-    --border: #e0e0e0;
-    --output-bg: #ffffff;
-}
-
-body {
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    text-align: center;
+    --primary: #1c1c1e;      /* Deep dark gray for major UI elements */
+    --secondary: #306998;    /* Deep Python blue accent */
+    --background: #121212;   /* Almost black overall background */
+    --text: #d0d0d0;         /* Light gray text for high contrast */
+    --border: #2a2a2a;       /* Dark border to subtly separate elements */
+    --output-bg: white;    /* Slightly lighter dark tone for output areas */
+  }
+  
+  
+  
+  
+  /* Base Reset */
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
     background: var(--background);
-    padding: 40px 20px;
+    font-family: 'Segoe UI', system-ui, sans-serif;
     color: var(--text);
-    line-height: 1.6;
-}
-
-h1 {
-    color: var(--primary);
-    font-size: 2.5rem;
+    min-height: 100vh;
+  }
+  
+  /* Flex container for Sidebar and Content */
+  .page {
+    display: flex;
+    height: 100vh; /* Full viewport height; adjust as needed */
+  }
+  
+  /* Sidebar on the left for Logo and Examples */
+  .sidebar {
+    width: 200px;       /* Adjust sidebar width as desired */
+    background-color: var(--primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 10px;
+  }
+  
+  /* Logo styling with a Python emoji */
+  .logo {
     margin-bottom: 2rem;
-    font-weight: 600;
-    letter-spacing: -0.5px;
-}
-
-#python-code {
+  }
+  
+  /* Examples container in the sidebar */
+  .examples-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    width: 100%;
+  }
+  
+  /* Example button styling */
+  .example-btn {
+    background: var(--secondary);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  
+  .example-btn:hover {
+    background: #359268;
+    transform: translateY(-1px);
+  }
+  
+  /* Main content area */
+  .content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    overflow-y: auto;
+  }
+  
+  /* Editor section styling */
+  .editor-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0;
+  }
+  
+  /* Ace Editor container styling */
+  #editor {
     width: 80%;
     max-width: 800px;
-    height: 300px;
+    height: 400px;
     margin: 20px auto;
     padding: 20px;
     border: 2px solid var(--border);
@@ -38,43 +102,43 @@ h1 {
     line-height: 1.5;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
     transition: all 0.2s ease;
-}
-
-#python-code:focus {
+  }
+  
+  #editor:focus {
     outline: none;
     border-color: var(--secondary);
     box-shadow: 0 4px 6px -1px rgba(66, 184, 131, 0.1);
-}
-
-button {
-    padding: 12px 28px;
+  }
+  
+  /* Run button styling */
+  #run-button {
+    padding: 0.75rem 2rem;
     font-size: 16px;
     background: var(--secondary);
-    color: white;
+    color: #fff;
     border: none;
     cursor: pointer;
     border-radius: 8px;
-    transition: all 0.2s ease;
     text-transform: uppercase;
     font-weight: 600;
     letter-spacing: 0.5px;
-    margin: 20px 0;
-}
-
-button:hover {
+    margin-top: 10px;
+    transition: all 0.2s ease;
+  }
+  
+  #run-button:hover {
     background: #359268;
     transform: translateY(-1px);
-    box-shadow: 0 4px 6px -1px rgba(66, 184, 131, 0.3);
-}
-
-h2 {
-    color: var(--primary);
-    margin: 30px 0 15px;
-    font-size: 1.4rem;
-    font-weight: 500;
-}
-
-#output {
+    box-shadow: 0 4px 6px -1px rgba(66,184,131,0.3);
+  }
+  
+  /* Output section styling */
+  .output-section {
+    padding: 20px 0;
+    text-align: center;
+  }
+  
+  #output {
     width: 80%;
     max-width: 800px;
     min-height: 150px;
@@ -88,56 +152,26 @@ h2 {
     white-space: pre-wrap;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Add responsive design */
-@media (max-width: 768px) {
-    #python-code, #output {
-        width: 95%;
-        margin: 10px auto;
+  }
+  
+  /* Responsive behavior */
+  @media (max-width: 768px) {
+    .page {
+      flex-direction: column;
+      height: auto;
     }
-    
-    h1 {
-        font-size: 2rem;
+    .sidebar {
+      width: 100%;
+      flex-direction: row;
+      justify-content: space-around;
+      padding: 10px;
     }
-}
-/* Add these to your existing styles */
-.container {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.examples-container {
-    display: flex;
-    gap: 1rem;
-    justify-content: center;
-    margin-bottom: 1.5rem;
-    flex-wrap: wrap;
-}
-
-.example-btn {
-    background: var(--primary);
-    padding: 8px 16px;
-    font-size: 14px;
-    border-radius: 6px;
-    transition: all 0.2s ease;
-    text-transform: none;
-    letter-spacing: normal;
-    margin: 0;
-}
-
-.example-btn:hover {
-    background: #3a506b;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-@media (max-width: 768px) {
-    .examples-container {
-        flex-direction: column;
+    .content {
+      padding: 10px;
     }
-    
-    .example-btn {
-        width: 100%;
+    #editor,
+    #output {
+      width: 90%;
     }
-}
+  }
+  
