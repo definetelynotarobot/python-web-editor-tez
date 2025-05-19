@@ -2,131 +2,170 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Online Python Editor</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Online Python Editor</title>
 
-    <!-- PyScript Core -->
-    <link rel="stylesheet" href="https://pyscript.net/releases/2024.4.1/core.css" />
-    <script type="module" src="https://pyscript.net/releases/2024.4.1/core.js"></script>
+  <!-- PyScript Core -->
+  <link rel="stylesheet" href="https://pyscript.net/releases/2024.4.1/core.css" />
+  <script type="module" src="https://pyscript.net/releases/2024.4.1/core.js"></script>
 
-    <!-- External CSS (Updated) -->
-    <link rel="stylesheet" href="../static/css/styles.css" />
+  <!-- External CSS -->
+  <link rel="stylesheet" href="../static/css/styles.css" />
 
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet" />
 
-    <!-- Ace Editor -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/ace.js" crossorigin="anonymous"></script>
+  <!-- Ace Editor -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/ace.js" crossorigin="anonymous"></script>
 </head>
 
 <body>
-    <div class="page">
-        <!-- Sidebar: Logo and Examples -->
-        <div class="sidebar">
-            <div class="logo">
-                <!-- Python Emoji Logo -->
-                <span style="font-size: 2rem;">🐍</span>
-            </div>
-            <div class="examples-container">
-                <button class="example-btn" data-example="basic">Basic Example</button>
-                <button class="example-btn" data-example="math">Math Example</button>
-                <button class="example-btn" data-example="dictionary">Dictionary Example</button>
-            </div>
-        </div>
-
-        <!-- MAIN CONTENT -->
-        <div class="content">
-            <!-- Header / Title / Examples Buttons -->
-
-
-            <!-- Editor & Run Button -->
-            <section class="editor-section">
-                <div id="editor"># Write your Python code here...</div>
-                <button id="run-button">Run Code ▶️</button>
-            </section>
-
-            <!-- Output -->
-            <section class="output-section">
-                <h2>Output:</h2>
-                <pre id="output"></pre>
-            </section>
-        </div>
+  <div class="page" id="editor-page">
+    <!-- Sidebar: Logo and Examples -->
+    <div class="sidebar">
+      <div class="logo">
+        <span class="logo-icon">🐍</span>
+      </div>
+      <div class="examples-container">
+        <button class="example-btn" data-example="basic">Basic Example</button>
+        <button class="example-btn" data-example="math">Math Example</button>
+        <button class="example-btn" data-example="dictionary">Dictionary Example</button>
+      </div>
     </div>
 
-    <!-- PyScript logic and event handlers -->
-    <script type="py">
+    <!-- MAIN CONTENT -->
+    <div class="content">
+      <section class="editor-section">
+        <div id="editor"># Write your Python code here...</div>
+        <button id="run-button">Run Code ▶️</button>
+      </section>
+
+      <section class="output-section">
+        <h2>Output:</h2>
+        <pre id="output"></pre>
+      </section>
+    </div>
+  </div>
+
+  <script type="py">
     from js import document, console, window
     from pyodide.ffi import create_proxy
-    import io, sys, traceback
+    import io, sys, traceback, json
 
+    # Kullanici email kontrolü
+    user_email = window.localStorage.getItem('user_email')
+    if not user_email:
+        window.location.href = 'login-signup.html'
+
+    # Global state
+    editor = None
     context = {"__builtins__": __builtins__}
 
+    # 1. Ace editörü başlat
+    def init_editor():
+        global editor
+        if hasattr(window, "ace"):
+            editor = window.ace.edit("editor")
+            editor.setTheme("ace/theme/chrome")
+            editor.session.setMode("ace/mode/python")
+            editor.setFontSize(16)
+            editor.renderer.setShowGutter(True)
+            editor.setReadOnly(False)
+            editor.focus()
+            log_action("Eylem: Aç")
+            editor.container.addEventListener(
+                "keydown", create_proxy(handle_keydown)
+            )
+        else:
+            console.log("Ace editor not available.")
+
+    # 2. Örnek kodları yükle
     examples = {
       "basic": '''print("Hello from the browser! 👋")
 name = "Alice"
 age = 28
 print(f"{name} is {age} years old. Next year: {age+1}")''',
-
       "math": '''import math
 radius = 5
 print(f"Area: {math.pi * radius**2:.2f}")
-print(f"Circumference: {2 * math.pi * radius:.2f}")''',
-
+print(f"Circumference: {2 * math.pi * radius**2:.2f}")''',
       "dictionary": '''student_grades = {"Math": 90, "Science": 85, "History": 88}
 for subject, grade in student_grades.items():
     print(f"{subject.ljust(10)}: {'⭐' * (grade // 10)}")'''
     }
-
-    editor = None
-    if hasattr(window, "ace"):
-      editor = window.ace.edit("editor")
-      # Change to a light theme if you prefer (e.g. "ace/theme/chrome")
-      editor.setTheme("ace/theme/chrome")
-      editor.session.setMode("ace/mode/python")
-      editor.setFontSize(16)
-      editor.renderer.setShowGutter(True)
-      editor.setReadOnly(False)
-      editor.focus()
-    else:
-      console.log("Ace editor not available.")
-
     def load_example(event):
-      example_id = event.target.getAttribute("data-example")
-      code = examples.get(example_id, "")
-      if editor:
-        editor.setValue(code, -1)
-        editor.focus()
-      else:
-        document.getElementById("editor").value = code
+        example_id = event.target.getAttribute("data-example")
+        code = examples.get(example_id, "")
+        if editor:
+            editor.setValue(code, -1)
+            editor.focus()
 
-    def run_code(event):
-      if editor:
-        code = editor.getValue()
-      else:
-        code = document.getElementById("editor").value
-
-      output_div = document.getElementById("output")
-
-      old_stdout = sys.stdout
-      new_stdout = io.StringIO()
-      sys.stdout = new_stdout
-
-      try:
-        exec(code, context)
-        output = new_stdout.getvalue()
-        output_div.textContent = output
-      except Exception as e:
-        output_div.textContent = traceback.format_exc()
-      finally:
-        sys.stdout = old_stdout
-
-    run_code_proxy = create_proxy(run_code)
     for btn in document.getElementsByClassName("example-btn"):
-      btn.addEventListener("click", create_proxy(load_example))
+        btn.addEventListener("click", create_proxy(load_example))
 
+    # 3. Tuş basımlarını logla
+    def handle_keydown(evt):
+        key = evt.key
+        act = f"Basılan Tuş: {key if len(key)==1 else key.upper()}"
+        log_action(act)
+
+    # 4. Log entry oluştur ve cache'e ekle hemen
+    def log_action(action):
+        ts = window.Date.new().toISOString()
+        code = editor.getValue() if editor else ''
+        entry = {
+            "email": user_email,
+            "time": ts,
+            "action": action,
+            "totalchars": len(code),
+            "totallines": code.count("\n") + 1
+        }
+        pending = json.loads(window.localStorage.getItem('pending_logs') or '[]')
+        pending.append(entry)
+        window.localStorage.setItem('pending_logs', json.dumps(pending))
+        console.log('Cached log:', json.dumps(entry))
+
+    # 5. Cached log'ları sunucuya gönder
+    def flush_to_server(event=None):
+        pending = json.loads(window.localStorage.getItem('pending_logs') or '[]')
+        if not pending:
+            return
+        payload = json.dumps(pending)
+        promise = window.fetch("https://your-server.com/api/log", {
+            "method": "POST",
+            "headers": {"Content-Type": "application/json"},
+            "body": payload
+        })
+        promise.then(lambda resp: window.localStorage.removeItem('pending_logs'))
+        promise.catch(lambda err: console.log("Flush error:", err))
+
+    # 6. Kod çalıştırma (no logging)
+    def run_code(event):
+        output_div = document.getElementById("output")
+        old_stdout = sys.stdout
+        new_stdout = io.StringIO()
+        sys.stdout = new_stdout
+        try:
+            exec(editor.getValue(), context)
+            output_div.textContent = new_stdout.getvalue()
+        except Exception:
+            output_div.textContent = traceback.format_exc()
+        finally:
+            sys.stdout = old_stdout
+
+    # Event listener for run
+    run_code_proxy = create_proxy(run_code)
     document.getElementById("run-button").addEventListener("click", run_code_proxy)
-  </script>
+
+    # Başlat
+    init_editor()
+    # Her 10 dakikada bir gönder
+    window.setInterval(create_proxy(flush_to_server), 10 * 60 * 1000)
+    # Sayfa kapanırken de cache'i sakla
+    window.addEventListener('beforeunload', create_proxy(lambda e: None))
+    
+    </script>
 </body>
 
 </html>

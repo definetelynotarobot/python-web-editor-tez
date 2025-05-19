@@ -174,4 +174,33 @@
       width: 90%;
     }
   }
+  .login-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: var(--background);
+  }
+  .login-box {
+    background: var(--primary);
+    padding: 2rem;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .login-box input {
+    padding: 0.5rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+  .login-box button {
+    padding: 0.75rem;
+    background: var(--secondary);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+  
   
