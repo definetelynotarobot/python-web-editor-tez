@@ -22,7 +22,6 @@
 
 <body>
   <div class="page" id="editor-page">
-    <!-- Sidebar: Logo and Examples -->
     <div class="sidebar">
       <div class="logo">
         <span class="logo-icon">🐍</span>
@@ -34,7 +33,6 @@
       </div>
     </div>
 
-    <!-- MAIN CONTENT -->
     <div class="content">
       <section class="editor-section">
         <div id="editor"># Write your Python code here...</div>
@@ -53,16 +51,13 @@
     from pyodide.ffi import create_proxy
     import io, sys, traceback, json
 
-    # Kullanici email kontrolü
     user_email = window.localStorage.getItem('user_email')
     if not user_email:
         window.location.href = 'login-signup.html'
 
-    # Global state
     editor = None
     context = {"__builtins__": __builtins__}
 
-    # 1. Ace editörü başlat
     def init_editor():
         global editor
         if hasattr(window, "ace"):
@@ -74,26 +69,16 @@
             editor.setReadOnly(False)
             editor.focus()
             log_action("Eylem: Aç")
-            editor.container.addEventListener(
-                "keydown", create_proxy(handle_keydown)
-            )
+            editor.container.addEventListener("keydown", create_proxy(handle_keydown))
         else:
             console.log("Ace editor not available.")
 
-    # 2. Örnek kodları yükle
     examples = {
-      "basic": '''print("Hello from the browser! 👋")
-name = "Alice"
-age = 28
-print(f"{name} is {age} years old. Next year: {age+1}")''',
-      "math": '''import math
-radius = 5
-print(f"Area: {math.pi * radius**2:.2f}")
-print(f"Circumference: {2 * math.pi * radius**2:.2f}")''',
-      "dictionary": '''student_grades = {"Math": 90, "Science": 85, "History": 88}
-for subject, grade in student_grades.items():
-    print(f"{subject.ljust(10)}: {'⭐' * (grade // 10)}")'''
+      "basic": '''print("Hello from the browser! 👋")\nname = "Alice"\nage = 28\nprint(f"{name} is {age} years old. Next year: {age+1}")''',
+      "math": '''import math\nradius = 5\nprint(f"Area: {math.pi * radius**2:.2f}")\nprint(f"Circumference: {2 * math.pi * radius**2:.2f}")''',
+      "dictionary": '''student_grades = {"Math": 90, "Science": 85, "History": 88}\nfor subject, grade in student_grades.items():\n    print(f"{subject.ljust(10)}: {'⭐' * (grade // 10)}")'''
     }
+
     def load_example(event):
         example_id = event.target.getAttribute("data-example")
         code = examples.get(example_id, "")
@@ -104,13 +89,11 @@ for subject, grade in student_grades.items():
     for btn in document.getElementsByClassName("example-btn"):
         btn.addEventListener("click", create_proxy(load_example))
 
-    # 3. Tuş basımlarını logla
     def handle_keydown(evt):
         key = evt.key
         act = f"Basılan Tuş: {key if len(key)==1 else key.upper()}"
         log_action(act)
 
-    # 4. Log entry oluştur ve cache'e ekle hemen
     def log_action(action):
         ts = window.Date.new().toISOString()
         code = editor.getValue() if editor else ''
@@ -126,21 +109,6 @@ for subject, grade in student_grades.items():
         window.localStorage.setItem('pending_logs', json.dumps(pending))
         console.log('Cached log:', json.dumps(entry))
 
-    # 5. Cached log'ları sunucuya gönder
-    def flush_to_server(event=None):
-        pending = json.loads(window.localStorage.getItem('pending_logs') or '[]')
-        if not pending:
-            return
-        payload = json.dumps(pending)
-        promise = window.fetch("https://your-server.com/api/log", {
-            "method": "POST",
-            "headers": {"Content-Type": "application/json"},
-            "body": payload
-        })
-        promise.then(lambda resp: window.localStorage.removeItem('pending_logs'))
-        promise.catch(lambda err: console.log("Flush error:", err))
-
-    # 6. Kod çalıştırma (no logging)
     def run_code(event):
         output_div = document.getElementById("output")
         old_stdout = sys.stdout
@@ -154,18 +122,41 @@ for subject, grade in student_grades.items():
         finally:
             sys.stdout = old_stdout
 
-    # Event listener for run
     run_code_proxy = create_proxy(run_code)
     document.getElementById("run-button").addEventListener("click", run_code_proxy)
 
-    # Başlat
     init_editor()
-    # Her 10 dakikada bir gönder
-    window.setInterval(create_proxy(flush_to_server), 10 * 60 * 1000)
-    # Sayfa kapanırken de cache'i sakla
     window.addEventListener('beforeunload', create_proxy(lambda e: None))
-    
-    </script>
+  </script>
+
+  <script>
+    setInterval(() => {
+      const raw = localStorage.getItem("pending_logs");
+      const token = localStorage.getItem("auth_token");
+      let logs;
+      try {
+        logs = JSON.parse(raw);
+      } catch (e) {
+        return;
+      }
+      if (!Array.isArray(logs) || logs.length === 0 || !token) return;
+
+      fetch("http://127.0.0.1:5000/api/log", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify(logs)
+      })
+        .then(res => res.text())
+        .then(text => {
+          console.log("✅ JS Fetch Success:", text);
+          localStorage.removeItem("pending_logs");
+        })
+        .catch(err => console.error("❌ JS Fetch Error:", err));
+    }, 60000);
+  </script>
 </body>
 
 </html>

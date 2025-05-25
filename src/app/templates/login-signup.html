@@ -6,29 +6,135 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Login / Signup</title>
     <link rel="stylesheet" href="../static/css/styles.css" />
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDJFPdJCtzILRBvNn_4igfj_o8k6pnTl5k",
+            authDomain: "python-editor-auth.firebaseapp.com",
+            projectId: "python-editor-auth",
+            storageBucket: "python-editor-auth.appspot.com",
+            messagingSenderId: "204813140754",
+            appId: "1:204813140754:web:f3ef3fb0c4e3bd9b19e9cb",
+            measurementId: "G-YFVC2HVQW6"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        window.switchView = (view) => {
+            document.getElementById("login-section").classList.remove("active");
+            document.getElementById("signup-section").classList.remove("active");
+            document.getElementById(view).classList.add("active");
+        }
+
+        window.handleLogin = async function () {
+            const email = document.getElementById("login-email").value;
+            const password = document.getElementById("login-password").value;
+            const errorDiv = document.getElementById("login-error");
+            errorDiv.textContent = "";
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const token = await userCredential.user.getIdToken();
+                localStorage.setItem("user_email", userCredential.user.email);
+                localStorage.setItem("auth_token", token);
+                window.location.href = "index.html";
+            } catch (error) {
+                errorDiv.textContent = error.message;
+            }
+        }
+
+        window.handleSignup = async function () {
+            const email = document.getElementById("signup-email").value;
+            const password = document.getElementById("signup-password").value;
+            const errorDiv = document.getElementById("signup-error");
+            errorDiv.textContent = "";
+
+            try {
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                const token = await userCredential.user.getIdToken();
+                localStorage.setItem("user_email", userCredential.user.email);
+                localStorage.setItem("auth_token", token);
+                window.location.href = "index.html";
+            } catch (error) {
+                if (error.code === 'auth/email-already-in-use') {
+                    document.getElementById("signup-error").textContent = "Account already exists. Redirecting to login...";
+                    setTimeout(() => switchView('login-section'), 2000);
+                } else {
+                    errorDiv.textContent = error.message;
+                }
+            }
+        }
+
+        window.handleGoogleLogin = async function () {
+            const errorDiv = document.getElementById("google-login-error");
+            errorDiv.textContent = "";
+
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const token = await result.user.getIdToken();
+                localStorage.setItem("user_email", result.user.email);
+                localStorage.setItem("auth_token", token);
+                window.location.href = "index.html";
+            } catch (error) {
+                errorDiv.textContent = error.message;
+            }
+        }
+
+        window.handleGoogleSignup = async function () {
+            const errorDiv = document.getElementById("google-signup-error");
+            errorDiv.textContent = "";
+
+            try {
+                const result = await signInWithPopup(auth, provider);
+                const token = await result.user.getIdToken();
+                localStorage.setItem("user_email", result.user.email);
+                localStorage.setItem("auth_token", token);
+                window.location.href = "index.html";
+            } catch (error) {
+                errorDiv.textContent = error.message;
+            }
+        }
+    </script>
 </head>
 
 <body>
-    <div class="login-page">
-        <div class="login-box">
-            <label for="email-input">Email:</label>
-            <input type="email" id="email-input" placeholder="you@example.com" />
-            <button id="login-btn">Giriş Yap</button>
-        </div>
+    <div class="toggle-container">
+        <button class="toggle-btn" onclick="switchView('login-section')">Login</button>
+        <button class="toggle-btn" onclick="switchView('signup-section')">Signup</button>
     </div>
 
-    <script>
-        const btn = document.getElementById('login-btn');
-        btn.addEventListener('click', () => {
-            const email = document.getElementById('email-input').value;
-            if (!email) {
-                alert('Lütfen geçerli bir email girin.');
-                return;
-            }
-            localStorage.setItem('user_email', email);
-            window.location.href = 'index.html';
-        });
-    </script>
+    <div class="login-page">
+        <div id="login-section" class="login-box auth-section active">
+            <h2>Login</h2>
+            <label for="login-email">Email:</label>
+            <input type="email" id="login-email" placeholder="you@example.com" />
+            <label for="login-password">Password:</label>
+            <input type="password" id="login-password" placeholder="Your password" />
+            <button onclick="handleLogin()">Login</button>
+            <div id="login-error" style="color: red; margin-top: 10px;"></div>
+            <hr />
+            <button onclick="handleGoogleLogin()">Login with Google</button>
+            <div id="google-login-error" style="color: red; margin-top: 10px;"></div>
+        </div>
+
+        <div id="signup-section" class="login-box auth-section">
+            <h2>Signup</h2>
+            <label for="signup-email">Email:</label>
+            <input type="email" id="signup-email" placeholder="you@example.com" />
+            <label for="signup-password">Password:</label>
+            <input type="password" id="signup-password" placeholder="Your password" />
+            <button onclick="handleSignup()">Sign Up</button>
+            <div id="signup-error" style="color: red; margin-top: 10px;"></div>
+            <hr />
+            <button onclick="handleGoogleSignup()">Sign Up with Google</button>
+            <div id="google-signup-error" style="color: red; margin-top: 10px;"></div>
+        </div>
+    </div>
 </body>
 
 </html>

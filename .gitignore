@@ -169,3 +169,8 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# node modules
+node_modules/
+
+python-editor-auth-firebase-adminsdk-fbsvc-2f839704fc.json
