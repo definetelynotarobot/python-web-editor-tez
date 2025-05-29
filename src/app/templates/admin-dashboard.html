@@ -7,6 +7,7 @@
     <title>Admin Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <script defer src="../static/js/admin-dashboard.js"></script>
     <link rel="stylesheet" href="../static/css/styles.css" />
 </head>
 
@@ -14,120 +15,22 @@
     <div class="dashboard-container">
         <h1>Admin Dashboard</h1>
         <div class="filter-container">
-            <label>Start Time: <input type="datetime-local" id="startTime"></label>
-            <label>End Time: <input type="datetime-local" id="endTime"></label>
+            <label for="startTime">Date:</label>
+            <input type="date" id="startTime">
             <button onclick="loadLogData()">Apply</button>
+        </div>
+        <div id="loading" class="loading-indicator" style="display: none;">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Loading...">
+            <span>Loading data...</span>
         </div>
         <div class="chart-grid">
             <canvas id="logsChart"></canvas>
             <canvas id="linesChart"></canvas>
         </div>
     </div>
-
-    <script>
-        let logsChartRef, linesChartRef;
-
-        async function loadLogData() {
-            const res = await fetch("http://127.0.0.1:5000/api/logs");
-            const data = await res.json();
-            console.log("Fetched log data:", data);
-
-            if (!Array.isArray(data)) {
-                console.error("Expected an array but got:", data);
-                return;
-            }
-
-            const startInput = document.getElementById('startTime').value;
-            const endInput = document.getElementById('endTime').value;
-            const start = startInput ? new Date(startInput) : null;
-            const end = endInput ? new Date(endInput) : null;
-
-            const groupedChars = {}, groupedLines = {};
-            data.forEach(entry => {
-                const time = new Date(entry.time);
-                if ((start && time < start) || (end && time > end)) return;
-
-                const email = entry.email;
-                if (!groupedChars[email]) groupedChars[email] = [];
-                if (!groupedLines[email]) groupedLines[email] = [];
-
-                groupedChars[email].push({ x: time, y: entry.totalchars || 0 });
-                groupedLines[email].push({ x: time, y: entry.totallines || 0 });
-            });
-
-            const datasetsChars = Object.entries(groupedChars).map(([email, entries]) => {
-                entries.sort((a, b) => a.x - b.x);
-                return {
-                    label: email,
-                    data: entries,
-                    fill: false,
-                    borderColor: getRandomColor(),
-                    tension: 0.2
-                };
-            });
-
-            const datasetsLines = Object.entries(groupedLines).map(([email, entries]) => {
-                entries.sort((a, b) => a.x - b.x);
-                return {
-                    label: email,
-                    data: entries,
-                    fill: false,
-                    borderColor: getRandomColor(),
-                    tension: 0.2
-                };
-            });
-
-            if (logsChartRef) logsChartRef.destroy();
-            if (linesChartRef) linesChartRef.destroy();
-
-            logsChartRef = new Chart(document.getElementById('logsChart').getContext('2d'), {
-                type: 'line',
-                data: { datasets: datasetsChars },
-                options: {
-                    responsive: true,
-                    scales: {
-                        x: {
-                            type: 'time',
-                            time: { tooltipFormat: 'HH:mm:ss', unit: 'minute' },
-                            title: { display: true, text: 'Time' }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            title: { display: true, text: 'Total Characters' }
-                        }
-                    }
-                }
-            });
-
-            linesChartRef = new Chart(document.getElementById('linesChart').getContext('2d'), {
-                type: 'line',
-                data: { datasets: datasetsLines },
-                options: {
-                    responsive: true,
-                    scales: {
-                        x: {
-                            type: 'time',
-                            time: { tooltipFormat: 'HH:mm:ss', unit: 'minute' },
-                            title: { display: true, text: 'Time' }
-                        },
-                        y: {
-                            beginAtZero: true,
-                            title: { display: true, text: 'Total Lines' }
-                        }
-                    }
-                }
-            });
-        }
-
-        function getRandomColor() {
-            const r = Math.floor(Math.random() * 255);
-            const g = Math.floor(Math.random() * 255);
-            const b = Math.floor(Math.random() * 255);
-            return `rgb(${r}, ${g}, ${b})`;
-        }
-
-        loadLogData();
-    </script>
 </body>
+
+</html>
+
 
 </html>
