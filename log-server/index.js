@@ -7,6 +7,7 @@ require('dotenv').config();
 const app = express();
 app.use(cors({ origin: '*' }));
 app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));  // ✅ serve HTML/JS/CSS
 
 // 🔐 Firebase Admin setup
 const serviceAccount = require('./python-editor-auth-firebase-adminsdk-fbsvc-2f839704fc.json');
@@ -39,6 +40,10 @@ const dbName = 'editor_logs';
 app.get('/', (req, res) => {
   res.send('Secure Log API running');
 });
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  });
+  
 
 app.get("/api/logs", async (req, res) => {
     try {
