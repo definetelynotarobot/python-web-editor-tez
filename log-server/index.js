@@ -50,7 +50,7 @@ app.get('/admin-dashboard', (req, res) => {
 app.get('/admin', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/admin.html'));
 });
-app.get('/index', (req, res) => {
+app.get('/editor', (req, res) => {
   res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
