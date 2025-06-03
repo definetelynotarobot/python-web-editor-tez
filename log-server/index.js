@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const { MongoClient } = require('mongodb');
 const admin = require('firebase-admin');
 require('dotenv').config();
@@ -7,15 +8,18 @@ require('dotenv').config();
 const app = express();
 app.use(cors({ origin: '*' }));
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));  // ✅ serve HTML/JS/CSS
 
-// 🔐 Firebase Admin setup
+// 🔐 Firebase Admin SDK
 const serviceAccount = require('./python-editor-auth-firebase-adminsdk-fbsvc-2f839704fc.json');
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
 
-// 🔐 Middleware to verify Firebase ID token
+// 📦 MongoDB setup
+const client = new MongoClient(process.env.MONGO_URI);
+const dbName = 'editor_logs';
+
+// 🧠 Token Verification Middleware
 const verifyFirebaseToken = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -23,7 +27,6 @@ const verifyFirebaseToken = async (req, res, next) => {
   }
 
   const token = authHeader.split('Bearer ')[1];
-
   try {
     const decoded = await admin.auth().verifyIdToken(token);
     req.user = decoded;
@@ -33,33 +36,24 @@ const verifyFirebaseToken = async (req, res, next) => {
   }
 };
 
-// 📦 MongoDB setup
-const client = new MongoClient(process.env.MONGO_URI);
-const dbName = 'editor_logs';
+// 🌐 Static files (CSS, JS)
+app.use('/static', express.static(path.join(__dirname, 'public/static')));
 
+// 🖼️ HTML routes
 app.get('/', (req, res) => {
-  res.send('Secure Log API running');
+  res.sendFile(path.join(__dirname, 'public/login-signup.html'));
 });
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-  });
-  
+app.get('/admin-dashboard', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/admin-dashboard.html'));
+});
+app.get('/admin', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/admin.html'));
+});
+app.get('/index', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public/index.html'));
+});
 
-app.get("/api/logs", async (req, res) => {
-    try {
-      await client.connect();
-      const db = client.db("editor_logs");
-      const collection = db.collection("keystrokes");
-      const logs = await collection.find({}).toArray();
-      res.json(logs);
-    } catch (err) {
-      console.error("Failed to fetch logs:", err);
-      res.status(500).json({ error: "Failed to fetch logs" });
-    }
-  });
-  
-
-// 🔒 Protected log endpoint
+// 📤 Log writing (auth protected)
 app.post('/api/log', verifyFirebaseToken, async (req, res) => {
   try {
     const logs = req.body;
@@ -75,7 +69,7 @@ app.post('/api/log', verifyFirebaseToken, async (req, res) => {
 
     await collection.insertMany(logs.map(entry => ({
       ...entry,
-      email: userEmail, // ✅ Use verified email
+      email: userEmail,
       time: new Date(entry.time),
     })));
 
@@ -86,6 +80,21 @@ app.post('/api/log', verifyFirebaseToken, async (req, res) => {
   }
 });
 
+// 📥 Log reading (open access)
+app.get('/api/logs', async (req, res) => {
+  try {
+    await client.connect();
+    const db = client.db(dbName);
+    const collection = db.collection('keystrokes');
+    const logs = await collection.find({}).toArray();
+    res.json(logs);
+  } catch (err) {
+    console.error("Failed to fetch logs:", err);
+    res.status(500).json({ error: "Failed to fetch logs" });
+  }
+});
+
+// 🟢 Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`✅ Secure API ready on port ${PORT}`);
