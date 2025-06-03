@@ -8,6 +8,8 @@ require('dotenv').config();
 const app = express();
 app.use(cors({ origin: '*' }));
 app.use(express.json());
+app.use('/static', express.static(path.join(__dirname, 'public', 'static')));
+
 
 // 🔐 Firebase Admin SDK
 const serviceAccount = require('./python-editor-auth-firebase-adminsdk-fbsvc-2f839704fc.json');
