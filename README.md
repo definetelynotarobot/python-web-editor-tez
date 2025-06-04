@@ -32,19 +32,20 @@ root/
 ├── firebase-admin.json         # Firebase service key
 ├── .env                        # Mongo URI and config
 ├── package.json
+```
 
 ### 🚀 Deployment
-- Frontend hosted on **Render**  (`/public` folder)
+
+- Frontend hosted on **Render** (`/public` folder)
 - Backend deployed to **Render** (`index.js` log-server)
 - Firebase console used for authentication and admin whitelisting
 
 ### 🔧 Tech Stack
+
 - Frontend: HTML, CSS, JS, PyScript, Chart.js
 - Backend: Node.js (Express), MongoDB
 - Auth: Firebase Authentication
 - Deployment: Render
-
-```
 
 ## 📌 Türkçe
 
@@ -74,19 +75,20 @@ root/
 ├── firebase-admin.json         # Firebase servis anahtarı
 ├── .env                        # Mongo URI ve ayarlar
 ├── package.json
+```
 
 ### 🚀 Yayınlama
+
 - Ön yüz: **Render** üzerinden (`/public`)
 - Arka yüz: **Render** servisine yüklenen Express sunucu
 - Firebase ile kimlik doğrulama ve admin kontrolü
 
 ### 🔧 Teknolojiler
+
 - Frontend: HTML, CSS, JavaScript, PyScript, Chart.js
 - Backend: Node.js (Express), MongoDB Atlas
 - Auth: Firebase Auth
 - Deploy: Render
-
-```
 
 ## 👨‍🎓 Developer | Geliştirici
 
