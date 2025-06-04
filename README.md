@@ -44,22 +44,23 @@ root/
 - Auth: Firebase Authentication
 - Deployment: Render
 
----
+```
 
 ## 📌 Türkçe
 
 Bu proje, kullanıcıların kod yazma davranışlarını analiz ederek **davranışsal kod intihal tespiti** yapmayı amaçlayan bir web tabanlı Python editörüdür. Geleneksel kod karşılaştırmasının ötesine geçerek, **tuş vuruşu ve satır sayısı** gibi bilgileri MongoDB'ye kaydeder ve oluşan verilerden anomaliler bularak intihal tespiti sağlar.
 
 ### ✅ Özellikler
+
 - Tarayıcıda gerçek zamanlı Python editörü (PyScript + Ace)
 - Firebase kimlik doğrulama
 - Tuş vuruşu ve satır loglaması
 - MongoDB’ye zaman damgalı log gönderimi
 - Admin panelinde grafiksel log görüntüleme
 
-
 ### 🗂️ Proje Yapısı
 
+```bash
 root/
 ├── public/
 │   ├── index.html              # Editör ekranı
@@ -85,7 +86,7 @@ root/
 - Auth: Firebase Auth
 - Deploy: Render
 
----
+```
 
 ## 👨‍🎓 Developer | Geliştirici
 
@@ -96,5 +97,3 @@ root/
 👨‍🏫 Advisor: Prof. Dr. Turgay Tugay Bilgin
 
 ---
-
-```
