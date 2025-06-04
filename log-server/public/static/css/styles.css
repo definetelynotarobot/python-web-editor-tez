@@ -238,7 +238,7 @@ body {
 .login-box h2 {
   color: #ffffff;
   font-size: 2rem;
-  font-weight: 700;
+  font-weight: 400;
   text-align: center;
   margin-bottom: 1rem;
   background: linear-gradient(135deg, #ffffff 0%, var(--secondary) 100%);
@@ -247,12 +247,13 @@ body {
   background-clip: text;
 }
 
+/* Override the red styling for regular login - only apply to admin */
+
 .login-box label {
   color: var(--text);
   font-weight: 500;
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
@@ -266,6 +267,7 @@ body {
   transition: all 0.3s ease;
   outline: none;
   backdrop-filter: blur(10px);
+  margin: 10px 0;
 }
 
 .login-box input::placeholder {
@@ -294,8 +296,7 @@ body {
   cursor: pointer;
   border-radius: 12px;
   font-size: 1rem;
-  font-weight: 600;
-  text-transform: uppercase;
+  font-weight: 300;
   letter-spacing: 0.5px;
   transition: all 0.3s ease;
   position: relative;
@@ -337,7 +338,7 @@ body {
   margin: 1rem 0;
 }
 
-/* Error styling */
+/* Error styling 
 .login-box div[id$="-error"] {
   color: var(--error-color);
   margin-top: 0.5rem;
@@ -348,7 +349,7 @@ body {
   background: rgba(255, 107, 107, 0.1);
   border: 1px solid rgba(255, 107, 107, 0.2);
   backdrop-filter: blur(10px);
-}
+}*/
 
 .toggle-container {
   display: flex;
@@ -374,7 +375,7 @@ body {
   color: rgba(255, 255, 255, 0.7);
   border: none;
   border-radius: 50px;
-  font-weight: 500;
+  font-weight: 300;
   font-size: 0.9rem;
   transition: all 0.3s ease;
   position: relative;
@@ -455,6 +456,324 @@ body {
     max-width: 300px;
     margin-left: auto;
     margin-right: auto;
+  }
+}
+
+/* ====================== ADMIN LOGIN SPECIFIC STYLES ====================== */
+
+/* Admin login gets a more professional, security-focused appearance */
+.admin-login .login-box h2 {
+  background: linear-gradient(135deg, #ff6b6b 0%, var(--secondary) 50%, #ffffff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Special styling when it's specifically admin login page */
+.admin-login .login-box {
+  border: 1px solid rgba(255, 107, 107, 0.2);
+  box-shadow: 
+    0 20px 40px var(--shadow-primary),
+    0 0 20px rgba(255, 107, 107, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+.admin-login .login-box:hover {
+  box-shadow: 
+    0 30px 60px var(--shadow-primary),
+    0 0 30px rgba(255, 107, 107, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.input-group {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.input-group label {
+  width: 100px;
+  text-align: right;
+  font-weight: 500;
+}
+
+.input-group input {
+  flex: 1;
+}
+
+.google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 1rem 1.5rem;
+  background: white;
+  color: #3c4043;
+  font-weight: 500;
+  font-size: 1rem;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  width: 100%;
+  max-width: 100%;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  text-transform: none;
+}
+
+.google-btn:hover {
+  background: #f7f7f7;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.google-btn img {
+  width: 20px;
+  height: 20px;
+  display: inline-block;
+}
+
+
+
+.error-text {
+  color: var(--error-color);
+  text-align: center;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+
+/* ====================== ADMIN DASHBOARD STYLES ====================== */
+
+.dashboard-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+  padding: 2rem;
+  color: var(--text);
+  position: relative;
+  overflow-x: hidden;
+}
+
+.dashboard-container::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(48, 105, 152, 0.05) 0%, transparent 50%);
+  animation: rotate 30s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dashboard-container > * {
+  position: relative;
+  z-index: 1;
+}
+
+.dashboard-container h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 3rem;
+  background: linear-gradient(135deg, #ffffff 0%, var(--secondary) 50%, var(--accent-hover) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 4px 20px rgba(48, 105, 152, 0.3);
+  letter-spacing: -0.02em;
+}
+
+.filter-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  margin: 2rem 0 3rem 0;
+  padding: 1.5rem;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 25px var(--shadow-primary);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.filter-container label {
+  color: var(--text);
+  font-weight: 600;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.filter-container input[type="date"] {
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  min-width: 180px;
+}
+
+.filter-container input[type="date"]:focus {
+  border-color: var(--secondary);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 
+    0 0 0 3px rgba(48, 105, 152, 0.2),
+    0 4px 12px rgba(48, 105, 152, 0.1);
+  transform: translateY(-2px);
+}
+
+.filter-container input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  cursor: pointer;
+}
+
+.filter-container button {
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, var(--secondary) 0%, var(--accent-hover) 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.filter-container button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.5s ease;
+}
+
+.filter-container button:hover::before {
+  left: 100%;
+}
+
+.filter-container button:hover {
+  background: linear-gradient(135deg, var(--accent-hover) 0%, #5ba3f5 100%);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 8px 25px rgba(48, 105, 152, 0.4),
+    0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+  gap: 3rem;
+  justify-content: center;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.chart-grid canvas {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 20px 40px var(--shadow-primary),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+  padding: 2rem;
+  transition: all 0.3s ease;
+  max-width: 100%;
+  height: auto !important;
+}
+
+.chart-grid canvas:hover {
+  transform: translateY(-5px);
+  box-shadow: 
+    0 30px 60px var(--shadow-primary),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  margin: 3rem auto;
+  font-size: 1.3rem;
+  color: #ffffff;
+  text-align: center;
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 2rem 3rem;
+  box-shadow: 0 8px 25px var(--shadow-primary);
+  max-width: 400px;
+}
+
+.loading-indicator img {
+  width: 48px;
+  height: 48px;
+  animation: spin 1s linear infinite;
+  filter: drop-shadow(0 4px 8px rgba(48, 105, 152, 0.3));
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Mobile responsiveness for dashboard */
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 1rem;
+  }
+  
+  .dashboard-container h1 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
+  
+  .filter-container {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .filter-container input[type="date"] {
+    min-width: 100%;
+  }
+  
+  .chart-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .chart-grid canvas {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-container h1 {
+    font-size: 1.5rem;
+  }
+  
+  .filter-container button {
+    width: 100%;
   }
 }
 
