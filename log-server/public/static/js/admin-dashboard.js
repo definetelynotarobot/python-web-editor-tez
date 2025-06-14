@@ -3,7 +3,7 @@
         async function loadLogData() {
             document.getElementById("loading").style.display = "block";
             try {
-                const res = await fetch("http://127.0.0.1:5000/api/logs");
+                const res = await fetch("https://python-web-editor-tez.onrender.com/api/logs");
                 const data = await res.json();
                 console.log("Fetched log data:", data);
 
