@@ -301,7 +301,11 @@ body {
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+   width: 100%; /* Tam genişlik */
+  text-align: center;
+  justify-content: center;
 }
+
 
 .login-box button::before {
   content: '';
@@ -506,21 +510,26 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  padding: 1rem 1.5rem;
-  background: white;
-  color: #3c4043;
-  font-weight: 500;
-  font-size: 1rem;
-  border-radius: 10px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  background-color: white;
+  width: 100%; /* Tüm genişlik */
+  padding: 0.9rem;
+  border-radius: 12px;
   cursor: pointer;
-  width: 100%;
-  max-width: 100%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.2s ease-in-out;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  text-transform: none;
+  margin-top: 0.5rem;
 }
+
+.google-btn:hover {
+  background-color: #f7f7f7;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.google-btn img {
+  width: 24px;
+  height: 24px;
+}
+
 
 .google-btn:hover {
   background: #f7f7f7;
