@@ -27,20 +27,20 @@
         <span class="logo-icon">🐍</span>
       </div>
       <div class="examples-container">
-        <button class="example-btn" data-example="basic">Basic Example</button>
-        <button class="example-btn" data-example="math">Math Example</button>
-        <button class="example-btn" data-example="dictionary">Dictionary Example</button>
+        <button class="example-btn" data-example="basic">Basit Örnek</button>
+        <button class="example-btn" data-example="math">Matematik Örneği</button>
+        <button class="example-btn" data-example="dictionary">Sözlük Örneği</button>
       </div>
     </div>
 
     <div class="content">
       <section class="editor-section">
-        <div id="editor"># Write your Python code here...</div>
-        <button id="run-button">Run Code ▶️</button>
+        <div id="editor"># Python kodunuzu buraya yazınız...</div>
+        <button id="run-button">Kodu Çalıştır ▶️</button>
       </section>
 
       <section class="output-section">
-        <h2>Output:</h2>
+        <h2>Çıktı:</h2>
         <pre id="output"></pre>
       </section>
     </div>
@@ -151,10 +151,10 @@
       })
         .then(res => res.text())
         .then(text => {
-          console.log("✅ JS Fetch Success:", text);
+          console.log("✅ Gçnderim Sağlandı:", text);
           localStorage.removeItem("pending_logs");
         })
-        .catch(err => console.error("❌ JS Fetch Error:", err));
+        .catch(err => console.error("❌ Gönderim Sağlanamadı:", err));
     }, 60000);
   </script>
 </body>
