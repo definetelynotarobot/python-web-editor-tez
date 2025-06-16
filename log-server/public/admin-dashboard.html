@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Admin Dashboard</title>
+    <title>Yönetici Paneli</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     <script defer src="./static/js/admin-dashboard.js"></script>
@@ -13,15 +13,15 @@
 
 <body>
     <div class="dashboard-container">
-        <h1>Admin Dashboard</h1>
+        <h1>Yönetici Paneli</h1>
         <div class="filter-container">
-            <label for="startTime">Date:</label>
+            <label for="startTime">Tarih:</label>
             <input type="date" id="startTime">
-            <button onclick="loadLogData()">Apply</button>
+            <button onclick="loadLogData()">Uygula</button>
         </div>
         <div id="loading" class="loading-indicator" style="display: none;">
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Loading...">
-            <span>Loading data...</span>
+            <span>Veri Yükleniyor...</span>
         </div>
         <div class="chart-grid">
             <canvas id="logsChart"></canvas>
