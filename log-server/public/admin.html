@@ -17,7 +17,9 @@
             <label for="admin-password">Şifre:</label>
             <input type="password" id="admin-password" placeholder="Your password" />
             <button onclick="handleAdminLogin()">Giriş Yap</button>
-            <button onclick="handleGoogleAdminLogin()">Google ile Giriş Yap</button>
+            <div class="google-btn" onclick="handleGoogleAdminLogin()">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" />
+            </div>
 
             <div id="admin-error" style="color: red; margin-top: 10px;"></div>
         </div>
