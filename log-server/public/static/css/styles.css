@@ -615,7 +615,6 @@ body {
   color: var(--text);
   font-weight: 600;
   font-size: 1.1rem;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
