@@ -151,10 +151,10 @@
       })
         .then(res => res.text())
         .then(text => {
-          console.log("✅ JS Fetch Success:", text);
+          console.log("✅ Gönderim Sağlandı:", text);
           localStorage.removeItem("pending_logs");
         })
-        .catch(err => console.error("❌ JS Fetch Error:", err));
+        .catch(err => console.error("❌ Gönderim Sağlanamadı:", err));
     }, 60000);
   </script>
 </body>

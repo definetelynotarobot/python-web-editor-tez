@@ -8,6 +8,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
     <script defer src="./static/js/admin-dashboard.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.1/dist/chartjs-plugin-zoom.min.js"></script>
     <link rel="stylesheet" href="./static/css/styles.css" />
 </head>
 
@@ -17,7 +18,20 @@
         <div class="filter-container">
             <label for="startTime">Tarih:</label>
             <input type="date" id="startTime">
-            <button onclick="loadLogData()">Uygula</button>
+            <button class="applyButton" onclick="loadLogData()">Uygula</button>
+        </div>
+        <div class="table-component">
+            <h3>İntihal Şüphesi Taşıyan Kullanıcılar</h3>
+            <table id="anomalyTable">
+                <thead>
+                    <tr>
+                        <th>E-Posta</th>
+                        <th>Toplam Anomali</th>
+                        <th>Son Tespit</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
         <div id="loading" class="loading-indicator" style="display: none;">
             <img src="https://upload.wikimedia.org/wikipedia/commons/c/c3/Python-logo-notext.svg" alt="Loading...">
@@ -26,7 +40,11 @@
         <div class="chart-grid">
             <canvas id="logsChart"></canvas>
             <canvas id="linesChart"></canvas>
+            <canvas id="speedChart"></canvas>
         </div>
+
+
+
     </div>
 </body>
 
