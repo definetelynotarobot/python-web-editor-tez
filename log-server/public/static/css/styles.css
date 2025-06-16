@@ -704,8 +704,9 @@ body {
     0 0 0 1px rgba(255, 255, 255, 0.05);
   padding: 2rem;
   transition: all 0.3s ease;
-  max-width: 100%;
+  max-width: 700px;
   height: auto !important;
+  height: 350px !important; /* or 400px, your call */
 }
 
 .chart-grid canvas:hover {
@@ -824,10 +825,6 @@ max-width: 700px;
 max-height: 350px;
 }
 
-.filter-container {
-text-align: center;
-margin: 1rem 0;
-}
 
 
 .filter-container button {
