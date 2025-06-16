@@ -4,8 +4,8 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login / Signup</title>
-    <link rel="stylesheet" href="/static/css/styles.css" />
+    <title>PyEditor</title>
+    <link rel="stylesheet" href="../static/css/styles.css" />
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
@@ -79,7 +79,7 @@
                 const token = await result.user.getIdToken();
                 localStorage.setItem("user_email", result.user.email);
                 localStorage.setItem("auth_token", token);
-                window.location.href = "editor";
+                window.location.href = "index.html";
             } catch (error) {
                 errorDiv.textContent = error.message;
             }
@@ -94,7 +94,7 @@
                 const token = await result.user.getIdToken();
                 localStorage.setItem("user_email", result.user.email);
                 localStorage.setItem("auth_token", token);
-                window.location.href = "editor";
+                window.location.href = "index.html";
             } catch (error) {
                 errorDiv.textContent = error.message;
             }
@@ -104,52 +104,54 @@
 
 <body>
     <div class="toggle-container">
-        <button class="toggle-btn" onclick="switchView('login-section')">Login</button>
-        <button class="toggle-btn" onclick="switchView('signup-section')">Signup</button>
+        <button class="toggle-btn" onclick="switchView('login-section')">Giriş Yap</button>
+        <button class="toggle-btn" onclick="switchView('signup-section')">Kayıt Ol</button>
     </div>
 
     <div class="login-page">
         <!-- LOGIN -->
         <div id="login-section" class="login-box auth-section active">
-            <h2>Login</h2>
+            <h2>Giriş Yap</h2>
 
             <div class="input-group">
-                <label for="login-email">Email:</label>
+                <label for="login-email">E-Posta:</label>
                 <input type="email" id="login-email" placeholder="you@example.com" />
             </div>
 
             <div class="input-group">
-                <label for="login-password">Password:</label>
-                <input type="password" id="login-password" placeholder="Your password" />
+                <label for="login-password">Şifre:</label>
+                <input type="password" id="login-password" placeholder="Şifreniz" />
             </div>
-
-            <button onclick="handleLogin()">Login</button>
+            <button onclick="handleLogin()">Giriş Yap</button>
             <div id="login-error" class="error-text"></div>
             <hr />
-            <button class="google-btn" onclick="handleGoogleLogin()">
-                Login with Google
-            </button>
+            <div class="google-btn" onclick="handleGoogleLogin()">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" />
+            </div>
+
             <div id="google-login-error" class="error-text"></div>
         </div>
 
         <!-- SIGNUP -->
         <div id="signup-section" class="login-box auth-section">
-            <h2>Signup</h2>
+            <h2>Kayıt Ol</h2>
 
             <div class="input-group">
-                <label for="signup-email">Email:</label>
+                <label for="signup-email">E-Posta:</label>
                 <input type="email" id="signup-email" placeholder="you@example.com" />
             </div>
 
             <div class="input-group">
-                <label for="signup-password">Password:</label>
-                <input type="password" id="signup-password" placeholder="Your password" />
+                <label for="signup-password">Şifre:</label>
+                <input type="password" id="signup-password" placeholder="Şifreniz" />
             </div>
 
-            <button onclick="handleSignup()">Sign Up</button>
+            <button onclick="handleSignup()">Kayıt Ol</button>
             <div id="signup-error" class="error-text"></div>
             <hr />
-            <button class="google-btn" onclick="handleGoogleSignup()">Sign Up with Google</button>
+            <div class="google-btn" onclick="handleGoogleSignup()"><img
+                    src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google logo" />
+            </div>
             <div id="google-signup-error" class="error-text"></div>
         </div>
 
