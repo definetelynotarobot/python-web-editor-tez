@@ -5,7 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Yönetici Paneli</title>
-    <link rel="stylesheet" href="/static/css/styles.css" />
+    <link rel="stylesheet" href="./static/css/styles.css" />
 </head>
 
 <body>
@@ -17,14 +17,17 @@
             <label for="admin-password">Şifre:</label>
             <input type="password" id="admin-password" placeholder="Your password" />
             <button onclick="handleAdminLogin()">Giriş Yap</button>
+            <button onclick="handleGoogleAdminLogin()">Google ile Giriş Yap</button>
+
             <div id="admin-error" style="color: red; margin-top: 10px;"></div>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-auth.js";
         import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/11.8.1/firebase-firestore.js";
+        const provider = new GoogleAuthProvider();
 
         const firebaseConfig = {
             apiKey: "AIzaSyDJFPdJCtzILRBvNn_4igfj_o8k6pnTl5k",
@@ -47,23 +50,25 @@
             return !querySnapshot.empty;
         }
 
-        window.handleAdminLogin = async function () {
-            const email = document.getElementById("admin-email").value;
-            const password = document.getElementById("admin-password").value;
+        window.handleGoogleAdminLogin = async function () {
             const errorDiv = document.getElementById("admin-error");
             errorDiv.textContent = "";
 
             try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                const isWhitelisted = await checkAdminListed(email);
+                const result = await signInWithPopup(auth, provider);
+                const user = result.user;
+                const token = await user.getIdToken();
 
-                if (!isWhitelisted) {
-                    errorDiv.textContent = "Access denied: Email is not authorized as admin.";
+                const adminsRef = collection(db, "admins");
+                const q = query(adminsRef, where("email", "==", user.email));
+                const snapshot = await getDocs(q);
+
+                if (snapshot.empty) {
+                    errorDiv.textContent = "Bu e-posta admin yetkisine sahip değil.";
                     return;
                 }
 
-                const token = await userCredential.user.getIdToken();
-                localStorage.setItem("user_email", email);
+                localStorage.setItem("user_email", user.email);
                 localStorage.setItem("auth_token", token);
                 window.location.href = "admin-dashboard.html";
             } catch (error) {
