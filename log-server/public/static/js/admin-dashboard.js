@@ -103,10 +103,19 @@ async function loadLogData() {
             borderColor: getRandomColor(),
             tension: 0.2
         }));
+        if (logsChartRef instanceof Chart) {
+    logsChartRef.destroy();
+    logsChartRef = null;
+}
+if (linesChartRef instanceof Chart) {
+    linesChartRef.destroy();
+    linesChartRef = null;
+}
+if (speedChartRef instanceof Chart) {
+    speedChartRef.destroy();
+    speedChartRef = null;
+}
 
-        if (logsChartRef) logsChartRef.destroy();
-        if (linesChartRef) logsChartRef.destroy();
-        if (speedChartRef) speedChartRef.destroy();
 
         logsChartRef = new Chart(document.getElementById('logsChart').getContext('2d'), {
             type: 'line',
@@ -242,7 +251,3 @@ function getRandomColor() {
     const b = Math.floor(Math.random() * 255);
     return `rgb(${r}, ${g}, ${b})`;
 }
-document.getElementById("applyButton").addEventListener("click", () => {
-  // diğer filtreleme işlemleri
-  loadLogData(); // ✅ grafik ve tabloları temizleyip yeniden çizer
-});
